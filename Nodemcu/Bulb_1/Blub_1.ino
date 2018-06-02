@@ -46,15 +46,20 @@ void loop()
             String line = client.readString();
             Serial.print(line);
             Serial.print("\n");
-            if(line == "Plug/1/true"){
-              Serial.print("Plug 1 is on!\n");
+            if(line == "Bulb/1/true"){
+              Serial.print("Bulb 1 is on!\n");
               digitalWrite(13, LOW);
-              client.println("Thing_Plug/1/Confirm-true");
+              client.println("Thing_Bulb/1/Confirm-true");
             }
-            else if(line == "Plug/1/false" ){
-              Serial.print("Plug 1 is off!\n");
+            else if(line == "Bulb/1/false" ){
+              Serial.print("Bulb 1 is off!\n");
               digitalWrite(13, HIGH);
-              client.println("Thing_Plug/1/Confirm-false");
+              client.println("Thing_Bulb/1/Confirm-false");
+            }else if (line == "reset"){
+              Serial.print("Bulb 1 is Reset!\n");
+              digitalWrite(13, HIGH);
+              client.println("Thing_Bulb/1/Confirm-reset");
+              delay(1500);
             }
             
     }

@@ -23,9 +23,15 @@ function handleConnection(conn) {
     console.log('connection data from %s: %s', remoteAddress, d);
     //conn.write("1");
     //console.log(messageTCP[0].toString().lenght)
-    client_mqtt.publish(messageTCP[0],messageTCP[1]) //ส่งการคอนเฟิมทั้งหมดไปยังเซิฟ เช่น [0] = หัวข้อที่จะส่งของ mqtt EX. Thing_Blub/1/Confirm [1] = คำสั่งเปิด/ปิด Ex. ข้อความคือ true/false 
-    console.log("Confirm to "+messageTCP[0]+" Message = "+messageTCP[1])
-    text=""
+    if(messageTCP[0]=="offline_web"){ //ถ้าสั่งงานแบบออฟไลน์ จะส่งข้อความมา รูปแบบ = offline_web-Blub/1/true
+      text=messageTCP[1]
+      console.log(text)
+    } else {
+      console.log(messageTCP)
+      client_mqtt.publish(messageTCP[0],messageTCP[1]) //ส่งการคอนเฟิมทั้งหมดไปยังเซิฟ เช่น [0] = หัวข้อที่จะส่งของ mqtt EX. Thing_Blub/1/Confirm [1] = คำสั่งเปิด/ปิด Ex. ข้อความคือ true/false 
+      console.log("Confirm to "+messageTCP[0]+" Message = "+messageTCP[1])
+      text=""
+    }
   }
 
   function onConnClose() { 
@@ -43,7 +49,7 @@ server.listen(8000, function() {  //ประกาศใช้งาน server
 
 client_mqtt.on('connect', function () {
   client_mqtt.subscribe('Hub_Home') // เป็นหัวข้อเดียวที่จะต้อง sub 
-  //client_mqtt.publish('testtopic', 'Hello mqtt')
+  client_mqtt.publish('Hub_Home_start', 'Ready') //บอกในเซิฟว่าhub พร้อมใช้งาน ให้รีเซ้ตค่าใน db เป็น off ให้หมด
 })
  
 client_mqtt.on('message', function (topic, message) {
